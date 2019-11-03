@@ -6,7 +6,6 @@ export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-
         // Open Map API
         //https://nominatim.openstreetmap.org/search?q=3+allee+des+platanes+draveil&format=json&polygon=1&addressdetails=1
     }
@@ -137,6 +136,40 @@ export default class Home extends React.Component {
                             </Col>
                         </Row>
                     </Form>
+=======
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="formSearchAnnounce">
+                                <Form.Label>Localiastion</Form.Label>
+                                <Form.Control type="text"/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group controlId="formSelectAnimalType">
+                                <Form.Label>Type d'animaux</Form.Label>
+                                <Form.Control as="select">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </Form.Control>
+                            </Form.Group>
+
+                            <Form.Group controlId="formSelectService">
+                                <Form.Label>Service</Form.Label>
+                                <Form.Control as="select">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </Form.Control>
+                            </Form.Group>
+
+                        </Col>
+                    </Row>
+>>>>>>> f99e2d4695d0f4d2a57138afe9adca402ce37d3c
                 </Container>
             </div>
         )
