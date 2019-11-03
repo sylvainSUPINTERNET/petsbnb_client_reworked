@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="bbd87b03-23ca-42a0-a2e8-f047909f8ec1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Authentication/LoginForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/LoginForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home.jsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +66,12 @@
       <updated>1571813517748</updated>
       <workItem from="1571813518948" duration="3436000" />
       <workItem from="1571846047136" duration="3889000" />
-      <workItem from="1571904309575" duration="11113000" />
+      <workItem from="1571904309575" duration="11870000" />
+      <workItem from="1572076984684" duration="10220000" />
+      <workItem from="1572620706105" duration="5683000" />
+      <workItem from="1572690033220" duration="3678000" />
+      <workItem from="1572720159536" duration="2075000" />
+      <workItem from="1572772755523" duration="4434000" />
     </task>
     <servers />
   </component>

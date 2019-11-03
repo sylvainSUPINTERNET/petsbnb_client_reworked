@@ -69,7 +69,7 @@ export default class LoginForm extends React.Component {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">
-                            <Form.Label>Mot de passe</Form.Label>
+                            <Form.Label>Mot de passe *</Form.Label>
                             <Form.Control type="password" placeholder="Mot de passe" required
                                           onChange={this.onChangePassword}/>
                         </Form.Group>
