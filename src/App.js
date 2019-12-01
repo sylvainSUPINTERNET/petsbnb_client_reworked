@@ -18,6 +18,7 @@ import {
 
 import {store, actions} from './redux/store'
 import ApplicationComponents from "./components";
+
 import Cookie from "js-cookie";
 
 import LoginForm from "./components/Authentication/LoginForm";
@@ -41,6 +42,9 @@ function App() {
                         </li>
                         <li>
                             <Link to="/logout">Logout</Link>
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://localhost:4999/join">Messagerie</a>
                         </li>
                     </ul>
                 </nav>

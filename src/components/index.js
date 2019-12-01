@@ -7,7 +7,7 @@ import Home from './Home';
  */
 const ApplicationComponents = {
   AUTH_LOGIN_COMPONENT : LoginForm,
-  AUTH_HOME_COMPONENT: Home
+  AUTH_HOME_COMPONENT: Home,
 };
 
 export default ApplicationComponents;
