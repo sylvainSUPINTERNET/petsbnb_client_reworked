@@ -11,6 +11,10 @@ export let apiConfiguration = {
     loginPath: "/auth/login"
 };
 
+export const jwt = {
+  secret_dev: "n2r5u8xkAmDxGeKaPdSgVkYp3s6v9ysBdEvHrMbQeThWmZq4t7wezZCxFFJANcRf"
+};
+
 /**
  * Endpoints for local / proxy dev
  * @type {{login: string}}

@@ -19,13 +19,29 @@ import {
 import {store, actions} from './redux/store'
 import ApplicationComponents from "./components";
 
-import Cookie from "js-cookie";
+import jsonwebtoken from 'jsonwebtoken';
+
 
 import LoginForm from "./components/Authentication/LoginForm";
 import Home from "./components/Home";
+import * as config from "./api/config";
 
 function isUserAuthenticated() {
-    return !!Cookie.get('accessToken');
+    let isLogged = false;
+
+    jsonwebtoken.verify(localStorage.getItem("accessToken"), config.jwt.secret_dev, (err,decoded) => {
+        if(err){
+            alert("authentication : " + err);
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("accessToken_exp");
+            isLogged = false;
+        } else {
+            // todo -> set le decoded payload in store if that necessary
+            console.log(decoded);
+            isLogged = true;
+        }
+    });
+    return isLogged;
 }
 
 function App() {
@@ -52,7 +68,14 @@ function App() {
             renders the first one that matches the current URL. */}
                 <Switch>
                     <Route exact path="/"
-                           component={() => isUserAuthenticated() ? <Home/> : <Redirect to='/auth/login'/>}/>
+                           component={
+                               () => {
+                                   if(isUserAuthenticated() === true){
+                                       return <Home/>
+                                   } else {
+                                       return <Redirect to='/auth/login'/>
+                                   }
+                           }}/>
                     <Route exact path="/auth/login" component={() => <LoginForm/>}/>
                     <Route exact path="/logout" component={() => <Logout/>}/>
                 </Switch>
@@ -62,7 +85,8 @@ function App() {
 }
 
 function Logout() {
-    Cookie.remove('accessToken');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("accessToken_exp");
     return <Redirect to='/auth/login'/>
 }
 

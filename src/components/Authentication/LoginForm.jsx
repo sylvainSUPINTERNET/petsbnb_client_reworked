@@ -43,13 +43,17 @@ export default class LoginForm extends React.Component {
                 console.log(response);
                 if (response.status === 200) {
                     const {exp} = jsonwebtoken.decode(response.data.token, jwtConfiguration.secret);
-                    Cookie
-                        .set("accessToken", response.data.token,{ expires: exp, secure: GlobalConfiguration.cookiesConfiguration.secure });
+                    localStorage
+                        .setItem("accessToken",response.data.token);
+                    localStorage
+                        .setItem("accessToken_exp", exp);
+                    //Cookie
+                      //  .set("accessToken", response.data.token,{ expires: exp, secure: GlobalConfiguration.cookiesConfiguration.secure });
 
                     // TODO => redirection
                 }
             })
-            .catch(e => console.log(e))
+            .catch(e => alert(e.message))
 
         // TODO request avec axios
     }
