@@ -8,7 +8,11 @@ export let apiConfiguration = {
     apiProxyUrl: 'http://localhost:4200/api/v1',
 
     // AUTHENTICATION
-    loginPath: "/auth/login"
+    loginPath: "/auth/login",
+
+
+    // AnimalsType
+    animalTypePath: "/animalsType"
 };
 
 export const jwt = {
@@ -22,7 +26,12 @@ export const jwt = {
 export let apiEndpoints = {
     // Authentication
     login: `${apiConfiguration.apiUrl}${apiConfiguration.loginPath}`,
-    loginProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.loginPath}`
+    loginProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.loginPath}`,
+
+
+    // AnimalsType
+    animalsType:`${apiConfiguration.apiUrl}${apiConfiguration.animalTypePath}`,
+    animalsTypeProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.animalTypePath}`,
 
 };
 

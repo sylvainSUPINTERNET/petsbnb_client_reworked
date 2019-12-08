@@ -61,7 +61,7 @@ export default class LoginForm extends React.Component {
     render() {
         return (
             <div>
-                <Container>
+                <Container className="mt-4 pt-5">
                     <Form onSubmit={this.onSubmit}>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Adresse email *</Form.Label>
