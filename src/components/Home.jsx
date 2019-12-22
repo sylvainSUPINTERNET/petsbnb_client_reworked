@@ -1,17 +1,42 @@
 import React from 'react';
-import {Col, Container, Form, Row} from "react-bootstrap";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 
 import Api from '../api/index';
 
 
-export default class Home extends React.Component {
+import Footer from '../components/Partials/Footer';
+
+import { withRouter } from "react-router-dom";
+
+
+class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            animalsType: []
+            departmentChoiceName: "",
+            department: "",
+
+            animalsType: [],
+            animalsTypeChoiceId: "",
+
+            services: [],
+            servicesChoiceId: "",
+
+            searchBtnLoaderDisplay: false,
+            searchBtnDisabled: false,
+            timerRedirectionSearchBtn: 800
+
         };
         // Open Map API
         //https://nominatim.openstreetmap.org/search?q=3+allee+des+platanes+draveil&format=json&polygon=1&addressdetails=1
+
+        this.handleChangeAnimalsType = this.handleChangeAnimalsType.bind(this);
+        this.handleChangeServices = this.handleChangeServices.bind(this);
+        this.handleChangeDepartment = this.handleChangeDepartment.bind(this);
+
+        this.onClickSearchBtn = this.onClickSearchBtn.bind(this);
+
+
     }
 
     componentDidMount() {
@@ -24,30 +49,113 @@ export default class Home extends React.Component {
 
                 if (status === 200) {
                     this.setAnimalsType(data)
-                    // TODO -> mise en cache de la données, plus rendu en liste basé du coup sur l'array
                 }
 
             })
             .catch(err => {
                 console.log(err);
             });
+
+        Api
+            .Services
+            .list()
+            .then((res) => {
+                this.setServices(res.data);
+            })
+            .catch(err => console.log(err))
+
+    }
+
+    handleChangeAnimalsType(event) {
+        this.setState({animalsTypeChoiceId: event.target.value});
+    }
+
+    handleChangeServices(event) {
+        this.setState({servicesChoiceId: event.target.value});
+    }
+
+    handleChangeDepartment(event) {
+        this.setState({departmentChoiceName: event.target.value});
     }
 
     setAnimalsType(data) {
-        this.setState({ animalsType: data });
+        this.setState({animalsType: data});
+    }
+
+    setServices(data) {
+        this.setState({services: data})
+    }
+
+    onClickSearchBtn() {
+        console.log("SARCH");
+        console.log(this.state);
+        this.setState({
+            searchBtnLoaderDisplay: true,
+            searchBtnDisabled: true
+        });
+        setTimeout(() => {
+            if(this.state.servicesChoiceId === "" && this.state.animalsTypeChoiceId === "" && this.state.departmentChoiceName === ""){
+                this.props.history.push("/annonces?page=0"); // only pagination and full list
+            } else {
+                // TODO api for filter query params
+                this.props.history.push("/annonces?elee=mouais&kglg=id");
+            }
+
+        }, this.state.timerRedirectionSearchBtn);
+    }
+
+
+
+    generateListAnimalsType() {
+        let animalsTypeChoices = this.state.animalsType.map((type) => {
+            return <option value={type.id}>{type.name}</option>
+        });
+
+        return <div className="input-group mb-3 col-md-4">
+            <select value={this.state.animalsTypeChoiceId} onChange={this.handleChangeAnimalsType}
+                    className="custom-select" id="inputGroupSelect02" defaultValue={"animalsType_none"}>
+                <option selected>Votre animal ...</option>
+                {animalsTypeChoices}
+            </select>
+            <div className="input-group-append">
+                <label className="input-group-text blue darken-4 text-white"
+                       htmlFor="inputGroupSelect02"><i className="fa fa-paw"></i></label>
+            </div>
+        </div>
+    }
+
+
+    generateListServices() {
+        let serviesChoice = this.state.services.map((type) => {
+            return <option value={type.id}>{type.name}</option>
+        });
+
+        return <div className="input-group mb-3 col-md-4">
+            <select value={this.state.servicesChoiceId} onChange={this.handleChangeServices}
+                    className="custom-select" id="inputGroupSelect03" defaultValue={"services_none"}>
+                <option selected>Votre service ...</option>
+                {serviesChoice}
+            </select>
+            <div className="input-group-append">
+                <label className="input-group-text blue darken-4 text-white"
+                       htmlFor="inputGroupSelect03"><i className="fa fa-ring"></i></label>
+            </div>
+        </div>
     }
 
 
     render() {
         return (
             <div>
-                <Container fluid={true}>
-                    <div className="container deep-blue-gradient">
+                <div className="container">
+                    <div>
                         <div className="card-header blue darken-4 m-0 p-0">
                             <div className="text-center mt-2 p-1 white-text">
-                                <h5><i className="fa fa-bullhorn"/> Annonces</h5>
+                                <h5><i className="fa fa-bullhorn"/> Rechercher des annonces</h5>
                             </div>
                         </div>
+
+
                         <div className="card">
                             <div className="card-body">
                                 <p className="justify-content-center text-center m-3 p-3 font-weight-lighter">Découvrez
@@ -57,7 +165,9 @@ export default class Home extends React.Component {
                                     <Row>
 
                                         <div className="input-group mb-3 col-md-4">
-                                            <select defaultValue={"default_dept"} className="custom-select"
+                                            <select value={this.state.departmentChoiceName}
+                                                    onChange={this.handleChangeDepartment}
+                                                    defaultValue={"default_dept"} className="custom-select"
                                                     id="inputGroupSelect01">
                                                 <option value="default_dept">Département</option>
                                                 <option value="01">01 - Ain</option>
@@ -170,37 +280,27 @@ export default class Home extends React.Component {
                                             </div>
                                         </div>
 
-                                        <div className="input-group mb-3 col-md-4">
-                                            <select className="custom-select" id="inputGroupSelect02">
-                                                <option selected>Votre animal ...</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                            <div className="input-group-append">
-                                                <label className="input-group-text blue darken-4 text-white"
-                                                       htmlFor="inputGroupSelect02"><i
-                                                    className="fa fa-paw"></i></label>
-                                            </div>
-                                        </div>
+                                        {this.generateListAnimalsType()}
 
 
-                                        <div className="input-group mb-3 col-md-4">
-                                            <select className="custom-select" id="inputGroupSelect02">
-                                                <option selected>Services...</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                            <div className="input-group-append">
-                                                <label className="input-group-text blue darken-4 text-white"
-                                                       htmlFor="inputGroupSelect02"><i
-                                                    className="fas fa-concierge-bell"></i></label>
-                                            </div>
-                                        </div>
+                                        {this.generateListServices()}
 
                                     </Row>
                                 </Form>
+                                <div className="row">
+                                    <div className="col text-center mt-3 py-2">
+                                        <button className="btn btn-primary btn-lg btn-success" type="button"
+                                                onClick={this.onClickSearchBtn}
+                                                disabled={this.state.searchBtnDisabled}>
+                                            <span
+                                                style={{display: this.state.searchBtnLoaderDisplay ? 'inline-block' : 'none'}}
+                                                className="spinner-border spinner-border-sm mr-2"
+                                                role="status"
+                                                aria-hidden="true"></span>
+                                            Rechercher
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -208,9 +308,86 @@ export default class Home extends React.Component {
 
                     </div>
 
+                </div>
 
-                </Container>
+                <div className="mt-3 container">
+                    <div className="row">
+                        <div className="col ">
+                            <div className="card">
+                                <div className="card-body">
+                                    <p className="text-center">Dernières annonces</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-3 container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-body">
+                                    <p className="text-center">Dernières annonces</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div className="mt-3 container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-body">
+                                    <p className="text-center">Dernières annonces</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-3 container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-body">
+                                    <p className="text-center">Dernières annonces</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-3 container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-body">
+                                    <p className="text-center">Dernières annonces</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-3 container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-body">
+                                    <p className="text-center">Dernières annonces</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <Footer></Footer>
+
             </div>
+
         )
     }
 }
+
+export default withRouter(Home);

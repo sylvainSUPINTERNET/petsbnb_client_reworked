@@ -25,6 +25,8 @@ import jsonwebtoken from 'jsonwebtoken';
 import LoginForm from "./components/Authentication/LoginForm";
 import Home from "./components/Home";
 import * as config from "./api/config";
+import AnnoncesList from "./components/Annonces/AnnoncesList";
+
 
 function isUserAuthenticated() {
     let isLogged = false;
@@ -105,6 +107,7 @@ function App() {
                            }}/>
                     <Route exact path="/auth/login" component={() => <LoginForm/>}/>
                     <Route exact path="/logout" component={() => <Logout/>}/>
+                    <Route path="/annonces" component={() => <AnnoncesList/>}/>
                 </Switch>
             </div>
         </Router>

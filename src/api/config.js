@@ -12,7 +12,10 @@ export let apiConfiguration = {
 
 
     // AnimalsType
-    animalTypePath: "/animalsType"
+    animalTypePath: "/animalsType",
+
+    // Services
+    servicesPath: "/services"
 };
 
 export const jwt = {
@@ -32,6 +35,10 @@ export let apiEndpoints = {
     // AnimalsType
     animalsType:`${apiConfiguration.apiUrl}${apiConfiguration.animalTypePath}`,
     animalsTypeProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.animalTypePath}`,
+
+    // Services
+    services:`${apiConfiguration.apiUrl}${apiConfiguration.servicesPath}`,
+    servicesProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.servicesPath}`,
 
 };
 

@@ -6,6 +6,7 @@ import {default as GlobalConfiguration} from "../../globalConfiguration";
 import Cookie from 'js-cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import {apiConfiguration, jwtConfiguration} from "../../api/config";
+import Footer from "../Partials/Footer";
 
 
 export default class LoginForm extends React.Component {
@@ -82,6 +83,8 @@ export default class LoginForm extends React.Component {
                         </Button>
                     </Form>
                 </Container>
+
+                <Footer></Footer>
             </div>
         )
     }
