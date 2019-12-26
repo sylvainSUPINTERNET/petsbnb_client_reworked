@@ -15,7 +15,13 @@ export let apiConfiguration = {
     animalTypePath: "/animalsType",
 
     // Services
-    servicesPath: "/services"
+    servicesPath: "/services",
+
+    // Annonces
+    annoncesPath: "/announces",
+
+    // Prefix
+    search: "/search"
 };
 
 export const jwt = {
@@ -39,6 +45,11 @@ export let apiEndpoints = {
     // Services
     services:`${apiConfiguration.apiUrl}${apiConfiguration.servicesPath}`,
     servicesProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.servicesPath}`,
+
+    // Announces
+    announcesSearch:`${apiConfiguration.apiUrl}${apiConfiguration.annoncesPath}${apiConfiguration.search}`,
+    announcesSearchProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.annoncesPath}${apiConfiguration.search}`,
+
 
 };
 

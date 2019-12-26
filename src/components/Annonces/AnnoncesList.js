@@ -14,7 +14,8 @@ class AnnoncesList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentPage: ""
+            currentPage: "",
+            announces: []
 
         };
     }
@@ -22,7 +23,22 @@ class AnnoncesList extends React.Component {
     componentDidMount() {
         let objQueryParams = QueryParams.getQueryParams(this.props.location.search);
         this.props.history.push(`/annonces${QueryParams.buildQueryAnnouncesList(objQueryParams)}`);
-        
+
+        Api
+            .Announces
+            .list(QueryParams.buildQueryAnnouncesList(objQueryParams))
+            .then( (res) => {
+                if(res.status === 200) {
+                    this.setState({
+                        announces : res.data.content
+                    });
+                } else {
+                    // TODO error API
+                    console.log("TODO -> display error")
+                }
+
+            })
+            .catch( err => console.log(err)); // todo
 
         //console.log(QueryParams.getQueryParams(this.props.location.search))
         //QueryParams.announcesPageOnly(QueryParams.getQueryParams(this.props.location.search));
@@ -46,6 +62,7 @@ class AnnoncesList extends React.Component {
             <div>
                 <div className="container white darken-4 rounded-1 p-4 mt-2">
 
+                    {JSON.stringify(this.state.announces)}
                     <div className="row">
 
                         <div className="col-md-3 p-1 mt-1">

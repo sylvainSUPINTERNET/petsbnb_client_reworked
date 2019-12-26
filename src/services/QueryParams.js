@@ -62,9 +62,6 @@ const buildQueryAnnouncesList = (objQueryParams) => {
 };
 
 
-const isValidQueryParams = (whiteListParams, parma) => {
-
-};
 export default {
     getQueryParams: getQueryParams,
     buildQueryAnnouncesList: buildQueryAnnouncesList
