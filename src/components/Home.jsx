@@ -36,6 +36,7 @@ class Home extends React.Component {
 
         this.onClickSearchBtn = this.onClickSearchBtn.bind(this);
 
+        this.generateQueryParamsUrlForRedirection = this.generateQueryParamsUrlForRedirection.bind(this);
 
     }
 
@@ -86,6 +87,29 @@ class Home extends React.Component {
         this.setState({services: data})
     }
 
+    generateQueryParamsUrlForRedirection(){
+
+        if(this.state.servicesChoiceId === "" && this.state.animalsTypeChoiceId === "" && this.state.departmentChoiceName === ""){
+           return "/annonces?page=0"; // only pagination and full list
+        } else {
+            let url = "/annonces?page=0";
+
+            if(this.state.servicesChoiceId){
+                url += `&services=${this.state.servicesChoiceId}`
+            }
+
+            if(this.state.animalsTypeChoiceId){
+                url += `&animals=${this.state.animalsTypeChoiceId}`
+            }
+
+            if(this.state.departmentChoiceName){
+                url += `&department=${this.state.departmentChoiceName}`
+            }
+
+            return url;
+        }
+    }
+
     onClickSearchBtn() {
         console.log("SARCH");
         console.log(this.state);
@@ -94,13 +118,7 @@ class Home extends React.Component {
             searchBtnDisabled: true
         });
         setTimeout(() => {
-            if(this.state.servicesChoiceId === "" && this.state.animalsTypeChoiceId === "" && this.state.departmentChoiceName === ""){
-                this.props.history.push("/annonces?page=0"); // only pagination and full list
-            } else {
-                // TODO api for filter query params
-                this.props.history.push("/annonces?elee=mouais&kglg=id");
-            }
-
+            this.props.history.push(this.generateQueryParamsUrlForRedirection())
         }, this.state.timerRedirectionSearchBtn);
     }
 

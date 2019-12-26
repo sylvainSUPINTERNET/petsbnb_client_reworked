@@ -1,6 +1,7 @@
 'use strict';
 
 import queryString from 'query-string';
+import {object} from "prop-types";
 
 
 /**
@@ -24,15 +25,18 @@ const buildQueryAnnouncesList = (objQueryParams) => {
     const whiteListParams = {
         services: {
             type: "number", // id
-            default: false
+            default: false,
+            name: "services"
         },
         animalsType: {
             type: "number", // id
-            default: false
+            default: false,
+            name:"animals"
         },
         department: {
             type: "string",
-            default: false
+            default: false,
+            name: "department"
         }
     };
 
@@ -42,10 +46,19 @@ const buildQueryAnnouncesList = (objQueryParams) => {
         paramsStr += `page=${objQueryParams["page"]}`
     }
 
-    // TODO other params here (dont forget to add & before after page has be setted
-    // TODO use generic method isValidQueryParams
+     if(objQueryParams[whiteListParams.services.name] && !isNaN(objQueryParams[whiteListParams.services.name])) {
+        paramsStr += `${separator}${whiteListParams.services.name}=${objQueryParams[whiteListParams.services.name]}`;
+     }
 
-    return paramsStr;
+     if(objQueryParams[whiteListParams.animalsType.name] && !isNaN(objQueryParams[whiteListParams.animalsType.name])){
+         paramsStr += `${separator}${whiteListParams.animalsType.name}=${objQueryParams[whiteListParams.animalsType.name]}`
+     }
+
+     if(objQueryParams[whiteListParams.department.name] && !isNaN(objQueryParams[whiteListParams.department.name])){
+         paramsStr += `${separator}${whiteListParams.department.name}=${objQueryParams[whiteListParams.department.name]}`
+     }
+
+    return paramsStr
 };
 
 

@@ -22,7 +22,7 @@ class AnnoncesList extends React.Component {
     componentDidMount() {
         let objQueryParams = QueryParams.getQueryParams(this.props.location.search);
         this.props.history.push(`/annonces${QueryParams.buildQueryAnnouncesList(objQueryParams)}`);
-
+        
 
         //console.log(QueryParams.getQueryParams(this.props.location.search))
         //QueryParams.announcesPageOnly(QueryParams.getQueryParams(this.props.location.search));
@@ -149,7 +149,7 @@ class AnnoncesList extends React.Component {
 
                         </div>
 
-                        <div className="col-md-3 p-1 mt-1">
+                        <div className="col-md-3 p-1 mt-1   ">
 
 
                             <div className="card card-cascade">
