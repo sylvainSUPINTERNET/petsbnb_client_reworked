@@ -9,13 +9,18 @@ import {withRouter} from "react-router-dom";
 
 import QueryParams from '../../services/QueryParams';
 
+import Pagination from "react-bootstrap/Pagination";
+import ReactPaginate from 'react-paginate';
+
 
 class AnnoncesList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentPage: "",
-            announces: []
+            currentPage: 0,
+            numberOfElements: 0,
+            totalPages :0,
+            announces: [],
 
         };
     }
@@ -27,10 +32,15 @@ class AnnoncesList extends React.Component {
         Api
             .Announces
             .list(QueryParams.buildQueryAnnouncesList(objQueryParams))
-            .then( (res) => {
-                if(res.status === 200) {
+            .then((res) => {
+
+                if (res.status === 200) {
                     this.setState({
-                        announces : res.data.content
+                        announces: res.data.content,
+                        currentPage: res.data.pageable.pageNumber + 1,
+                        numberOfElements: res.data.pageable.pageSize,
+                        totalPages: res.data.totalPages
+
                     });
                 } else {
                     // TODO error API
@@ -38,24 +48,32 @@ class AnnoncesList extends React.Component {
                 }
 
             })
-            .catch( err => console.log(err)); // todo
-
-        //console.log(QueryParams.getQueryParams(this.props.location.search))
-        //QueryParams.announcesPageOnly(QueryParams.getQueryParams(this.props.location.search));
-        //history.push(`/announces?page=${}`)
-
-
-        /*
-        Api
-            .Services
-            .list()
-            .then((res) => {
-                this.setServices(res.data);
-            })
-            .catch(err => console.log(err))
-            */
-
+            .catch(err => console.log(err)); // todo
     }
+
+
+    handlePageClick = data => {
+        let selected = data.selected; // Beware, correspond to page clicked - 1 (to match with pagination api)
+
+        this.setState({
+            currentPage: selected
+        });
+        console.log("CURRENT PAGE", this.state.currentPage)
+
+        //let objQueryParams = QueryParams.getQueryParams(this.props.location.search);
+        //objQueryParams["page"] = this.state.currentPage;
+        //this.props.history.push(`/annonces${QueryParams.buildQueryAnnouncesList(objQueryParams)}`);
+
+        // TODO -> update query param
+        // TODO -> update currentPage
+        // TODO -> update list (call API with pagination updatezd);
+        console.log("SELECTED", selected);
+//        let offset = Math.ceil(selected * this.props.perPage);
+
+  //      this.setState({ offset: offset }, () => {
+    //        this.loadCommentsFromServer();
+      //  });
+    };
 
     render() {
         return (
@@ -236,25 +254,23 @@ class AnnoncesList extends React.Component {
 
                     </div>
 
-
-                    <nav aria-label="Page navigation example">
-                        <ul className="pagination pg-blue">
-                            <li className="page-item">
-                                <a className="page-link" tabIndex="-1">Previous</a>
-                            </li>
-                            <li className="page-item"><a className="page-link">1</a></li>
-                            <li className="page-item active">
-                                <a className="page-link">2 <span className="sr-only">(current)</span></a>
-                            </li>
-                            <li className="page-item"><a className="page-link">3</a></li>
-                            <li className="page-item ">
-                                <a className="page-link">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-
+                    {this.state.totalPages}
+                    <ReactPaginate
+                        previousLabel={'previous'}
+                        nextLabel={'next'}
+                        breakLabel={'...'}
+                        breakClassName={'break-me'}
+                        pageCount={this.state.totalPages}
+                        marginPagesDisplayed={this.state.numberOfElements}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={'pagination'}
+                        subContainerClassName={'pages pagination'}
+                        activeClassName={'active'}
+                    />
 
                 </div>
+
 
                 <Footer></Footer>
             </div>
@@ -262,8 +278,6 @@ class AnnoncesList extends React.Component {
         )
     }
 }
-
-
 
 
 export default withRouter(AnnoncesList);
