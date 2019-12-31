@@ -8,10 +8,13 @@ import {withRouter} from "react-router-dom";
 
 
 import QueryParams from '../../services/QueryParams';
-
-import Pagination from "react-bootstrap/Pagination";
 import ReactPaginate from 'react-paginate';
 
+import {getLoadingText} from '../LoaderSettings';
+
+import LoadingOverlay from 'react-loading-overlay';
+
+import AnnouncesCard from '../Annonces/AnnouncesCard';
 
 class AnnoncesList extends React.Component {
     constructor(props) {
@@ -19,9 +22,10 @@ class AnnoncesList extends React.Component {
         this.state = {
             currentPage: 0,
             numberOfElements: 0,
-            totalPages :0,
+            totalPages: 0,
             announces: [],
-
+            isLoading: true,
+            delay: 1000
         };
     }
 
@@ -39,11 +43,14 @@ class AnnoncesList extends React.Component {
                         announces: res.data.content,
                         currentPage: res.data.pageable.pageNumber + 1,
                         numberOfElements: res.data.pageable.pageSize,
-                        totalPages: res.data.totalPages
+                        totalPages: res.data.totalPages,
+                        isLoading: false
 
                     });
                 } else {
-                    // TODO error API
+                    this.setState({
+                        isLoading: false
+                    });
                     console.log("TODO -> display error")
                 }
 
@@ -53,229 +60,149 @@ class AnnoncesList extends React.Component {
 
 
     handlePageClick = data => {
-        let selected = data.selected; // Beware, correspond to page clicked - 1 (to match with pagination api)
-
+        // Beware, correspond to page clicked - 1 (to match with pagination api)
+        this.state.currentPage = data.selected;
         this.setState({
-            currentPage: selected
+            isLoading: true
         });
-        console.log("CURRENT PAGE", this.state.currentPage)
 
-        //let objQueryParams = QueryParams.getQueryParams(this.props.location.search);
-        //objQueryParams["page"] = this.state.currentPage;
-        //this.props.history.push(`/annonces${QueryParams.buildQueryAnnouncesList(objQueryParams)}`);
+        let objQueryParams = QueryParams.getQueryParams(this.props.location.search);
+        objQueryParams["page"] = this.state.currentPage;
+        Api
+            .Announces
+            .list(QueryParams.buildQueryAnnouncesList(objQueryParams))
+            .then(res => {
+                setTimeout(() => {
+                    if (res.status === 200) {
+                        this.setState({
+                            announces: res.data.content,
+                            currentPage: res.data.pageable.pageNumber + 1,
+                            numberOfElements: res.data.pageable.pageSize,
+                            totalPages: res.data.totalPages,
+                            isLoading: false
 
-        // TODO -> update query param
-        // TODO -> update currentPage
-        // TODO -> update list (call API with pagination updatezd);
-        console.log("SELECTED", selected);
-//        let offset = Math.ceil(selected * this.props.perPage);
+                        });
+                        this.props.history.push(`/annonces${QueryParams.buildQueryAnnouncesList(objQueryParams)}`)
 
-  //      this.setState({ offset: offset }, () => {
-    //        this.loadCommentsFromServer();
-      //  });
+                    } else {
+                        this.setState({
+                            isLoading: false
+                        });
+                        console.log("TODO -> display error")
+                    }
+                }, this.state.delay);
+
+            })
+            .catch(err => console.log(err));
     };
 
+
     render() {
-        return (
-            <div>
-                <div className="container white darken-4 rounded-1 p-4 mt-2">
+        if (this.state.announces.length > 0) {
+            return (
+                <div>
+                    <LoadingOverlay
+                        active={this.state.isLoading}
+                        spinner
+                        text={getLoadingText()}>
+                        <div className="container white darken-4 rounded-1 p-4 mt-2">
 
-                    {JSON.stringify(this.state.announces)}
-                    <div className="row">
+                            {JSON.stringify(this.state.announces)}
 
-                        <div className="col-md-3 p-1 mt-1">
-
-
-                            <div className="card card-cascade">
-                                <div className="view view-cascade overlay">
-                                    <img className="card-img-top"
-                                         src="https://mdbootstrap.com/img/Photos/Others/men.jpg"
-                                         alt="Card image cap"/>
-                                    <a>
-                                        <div className="mask rgba-white-slight"></div>
-                                    </a>
+                            <div className="row">
+                                <div className="col-md-6 col-sm-12">
+                                    <div className="container darken-4 red">
+                                        Filter
+                                    </div>
                                 </div>
-                                <div className="card-body card-body-cascade text-center">
-                                    <h4 className="card-title"><strong>Billy Coleman</strong></h4>
-                                    <h6 className="font-weight-bold indigo-text py-2">Web developer</h6>
-                                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam.
-                                    </p>
-                                    <a type="button" className="btn-floating btn-small btn-fb"><i
-                                        className="fab fa-facebook-f"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-tw"><i
-                                        className="fab fa-twitter"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-dribbble"><i
-                                        className="fab fa-dribbble"></i></a>
+
+                                <div className="col-md-6">
+                                    <div className="row">
+
+                                        {this.state.announces.map((announce) =>
+
+                                            <div className="col-md-3 p-1 mt-1">
+                                                <AnnouncesCard announce={announce}/>
+                                            </div>
+                                        )}
+
+                                    </div>
                                 </div>
-                                <div className="card-footer text-muted text-center">
-                                    2 days ago
-                                </div>
+                            </div>
+
+
+                            <div className="d-flex mt-3">
+                                <ReactPaginate
+                                    previousLabel={'précédent'}
+                                    previousClassName={'page-item'}
+                                    previousLinkClassName={'page-link'}
+                                    nextLabel={'suivant'}
+                                    nextClassName={'page-item'}
+                                    nextLinkClassName={'page-link'}
+                                    breakLabel={'...'}
+                                    breakClassName={'page-item'}
+                                    breakLinkClassName={'page-link'}
+                                    pageCount={this.state.totalPages}
+                                    marginPagesDisplayed={this.state.numberOfElements}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={this.handlePageClick}
+                                    containerClassName={'pagination pg-blue mx-auto'}
+                                    pageLinkClassName={'page-link'}
+                                    pageClassName={'page-item'}
+                                    activeClassName={'active'}/>
                             </div>
 
 
                         </div>
 
-
-                        <div className="col-md-3 p-1 mt-1">
-
-
-                            <div className="card card-cascade">
-                                <div className="view view-cascade overlay">
-                                    <img className="card-img-top"
-                                         src="https://mdbootstrap.com/img/Photos/Others/men.jpg"
-                                         alt="Card image cap"/>
-                                    <a>
-                                        <div className="mask rgba-white-slight"></div>
-                                    </a>
-                                </div>
-                                <div className="card-body card-body-cascade text-center">
-                                    <h4 className="card-title"><strong>Billy Coleman</strong></h4>
-                                    <h6 className="font-weight-bold indigo-text py-2">Web developer</h6>
-                                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam.
-                                    </p>
-                                    <a type="button" className="btn-floating btn-small btn-fb"><i
-                                        className="fab fa-facebook-f"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-tw"><i
-                                        className="fab fa-twitter"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-dribbble"><i
-                                        className="fab fa-dribbble"></i></a>
-                                </div>
-                                <div className="card-footer text-muted text-center">
-                                    2 days ago
-                                </div>
-                            </div>
+                    </LoadingOverlay>
 
 
-                        </div>
-
-
-                        <div className="col-md-3 p-1 mt-1">
-
-
-                            <div className="card card-cascade">
-                                <div className="view view-cascade overlay">
-                                    <img className="card-img-top"
-                                         src="https://mdbootstrap.com/img/Photos/Others/men.jpg"
-                                         alt="Card image cap"/>
-                                    <a>
-                                        <div className="mask rgba-white-slight"></div>
-                                    </a>
-                                </div>
-                                <div className="card-body card-body-cascade text-center">
-                                    <h4 className="card-title"><strong>Billy Coleman</strong></h4>
-                                    <h6 className="font-weight-bold indigo-text py-2">Web developer</h6>
-                                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam.
-                                    </p>
-                                    <a type="button" className="btn-floating btn-small btn-fb"><i
-                                        className="fab fa-facebook-f"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-tw"><i
-                                        className="fab fa-twitter"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-dribbble"><i
-                                        className="fab fa-dribbble"></i></a>
-                                </div>
-                                <div className="card-footer text-muted text-center">
-                                    2 days ago
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div className="col-md-3 p-1 mt-1   ">
-
-
-                            <div className="card card-cascade">
-                                <div className="view view-cascade overlay">
-                                    <img className="card-img-top"
-                                         src="https://mdbootstrap.com/img/Photos/Others/men.jpg"
-                                         alt="Card image cap"/>
-                                    <a>
-                                        <div className="mask rgba-white-slight"></div>
-                                    </a>
-                                </div>
-                                <div className="card-body card-body-cascade text-center">
-                                    <h4 className="card-title"><strong>Billy Coleman</strong></h4>
-                                    <h6 className="font-weight-bold indigo-text py-2">Web developer</h6>
-                                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam.
-                                    </p>
-                                    <a type="button" className="btn-floating btn-small btn-fb"><i
-                                        className="fab fa-facebook-f"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-tw"><i
-                                        className="fab fa-twitter"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-dribbble"><i
-                                        className="fab fa-dribbble"></i></a>
-                                </div>
-                                <div className="card-footer text-muted text-center">
-                                    2 days ago
-                                </div>
-                            </div>
-
-
-                        </div>
-
-
-                        <div className="col-md-3">
-
-
-                            <div className="card card-cascade">
-                                <div className="view view-cascade overlay">
-                                    <img className="card-img-top"
-                                         src="https://mdbootstrap.com/img/Photos/Others/men.jpg"
-                                         alt="Card image cap"/>
-                                    <a>
-                                        <div className="mask rgba-white-slight"></div>
-                                    </a>
-                                </div>
-                                <div className="card-body card-body-cascade text-center">
-                                    <h4 className="card-title"><strong>Billy Coleman</strong></h4>
-                                    <h6 className="font-weight-bold indigo-text py-2">Web developer</h6>
-                                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam.
-                                    </p>
-                                    <a type="button" className="btn-floating btn-small btn-fb"><i
-                                        className="fab fa-facebook-f"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-tw"><i
-                                        className="fab fa-twitter"></i></a>
-                                    <a type="button" className="btn-floating btn-small btn-dribbble"><i
-                                        className="fab fa-dribbble"></i></a>
-                                </div>
-                                <div className="card-footer text-muted text-center">
-                                    2 days ago
-                                </div>
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-                    {this.state.totalPages}
-                    <ReactPaginate
-                        previousLabel={'previous'}
-                        nextLabel={'next'}
-                        breakLabel={'...'}
-                        breakClassName={'break-me'}
-                        pageCount={this.state.totalPages}
-                        marginPagesDisplayed={this.state.numberOfElements}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClick}
-                        containerClassName={'pagination'}
-                        subContainerClassName={'pages pagination'}
-                        activeClassName={'active'}
-                    />
+                    <Footer></Footer>
 
                 </div>
 
+            )
+        } else {
+            return (
+                <div>
+                    <LoadingOverlay
+                        active={this.state.isLoading}
+                        spinner
+                        text={getLoadingText()}>
+                        <div className="container white darken-4 rounded-1 p-4 mt-2">
 
-                <Footer></Footer>
-            </div>
+                            {JSON.stringify(this.state.announces)}
 
-        )
+                            <div className="row">
+                                <div className="col-md-6 col-sm-12">
+                                    <div className="container darken-4 red">
+                                        Filter
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6">
+                                    <div className="row">
+
+                                        <div className="alert alert-light" role="alert">
+                                            Aucunes annonces pour cette recherche ...
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </LoadingOverlay>
+
+
+                    <Footer></Footer>
+
+                </div>
+            )
+        }
+
     }
 }
 
