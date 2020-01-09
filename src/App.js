@@ -26,6 +26,7 @@ import LoginForm from "./components/Authentication/LoginForm";
 import Home from "./components/Home";
 import * as config from "./api/config";
 import AnnoncesList from "./components/Annonces/AnnoncesList";
+import AnnouncesProfile from "./components/Annonces/AnnouncesProfile";
 
 
 function isUserAuthenticated() {
@@ -108,6 +109,7 @@ function App() {
                     <Route exact path="/auth/login" component={() => <LoginForm/>}/>
                     <Route exact path="/logout" component={() => <Logout/>}/>
                     <Route path="/annonces" component={() => <AnnoncesList/>}/>
+                    <Route exact path="/annonce/:uuid" component={ () => <AnnouncesProfile/>}/>
                 </Switch>
             </div>
         </Router>

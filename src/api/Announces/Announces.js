@@ -14,9 +14,18 @@ let search = async (params) => {
 };
 
 
-const AnimalsType = {
-    list: search
+let get = async (uuid) => {
+
+    return await axios.get(`${apiEndpoints.announceProfileProxy}/${uuid}`, {
+        headers: {'Authorization': 'Bearer ' + TokenService.getAccessToken()}
+    })
 };
 
 
-export default AnimalsType;
+const Announces = {
+    list: search,
+    getOne: get
+};
+
+
+export default Announces;

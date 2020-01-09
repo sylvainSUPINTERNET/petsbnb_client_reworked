@@ -1,11 +1,24 @@
 import React from "react";
 
-export default class AnnouncesCard extends React.Component {
+import {displayCurrency, displayDate} from "../Utils";
+
+import {withRouter} from "react-router-dom";
+
+
+class AnnouncesCard extends React.Component {
+
 
 
     constructor(props) {
         super(props)
+
+        this.goToProfile = this.goToProfile.bind(this);
     }
+
+    goToProfile(){
+        this.props.history.push(`/annonce/${this.props.announce.uuid}`);
+    }
+
 
 
     render() {
@@ -21,24 +34,25 @@ export default class AnnouncesCard extends React.Component {
                         <a>
                             <div className="mask rgba-white-slight"></div>
                         </a>
+
+                        <div className="text-center mt-2">
+                        <span className="badge badge-info ml-2"><i className="fas fa-clock"></i> {this.props.announce.farePerHour}{displayCurrency(this.props.announce.currency)}</span>
+                            <span className="badge badge-info ml-2"><i className="fas fa-calendar-day"></i> {this.props.announce.farePerDay}{displayCurrency(this.props.announce.currency)}</span>
+                        <span className="badge badge-info ml-2"><i className="fa fa-calendar-alt"></i>  {this.props.announce.farePerMonth}{displayCurrency(this.props.announce.currency)}</span>
+                        </div>
                     </div>
                     <div className="card-body card-body-cascade text-center">
-                        <h4 className="card-title"><strong>{this.props.announce.id}</strong></h4>
-                        <h6 className="font-weight-bold indigo-text py-2">Web developer</h6>
+                        <h6 className="font-weight-bold indigo-text py-2">{this.props.announce.title}</h6>
                         <p className="card-text">
                             {
                                 this.props.announce.description
                             }
                         </p>
-                        <a type="button" className="btn-floating btn-small btn-fb"><i
-                            className="fab fa-facebook-f"></i></a>
-                        <a type="button" className="btn-floating btn-small btn-tw"><i
-                            className="fab fa-twitter"></i></a>
-                        <a type="button" className="btn-floating btn-small btn-dribbble"><i
-                            className="fab fa-dribbble"></i></a>
+                       <div className="row">
+                       </div>
                     </div>
                     <div className="card-footer text-muted text-center">
-                        2 days ago
+                        <button onClick={this.goToProfile} className="btn btn-md btn-primary">Voir l'annonce</button>
                     </div>
                 </div>
 
@@ -49,3 +63,6 @@ export default class AnnouncesCard extends React.Component {
     }
 
 }
+
+export default withRouter(AnnouncesCard);
+

@@ -213,11 +213,8 @@ class AnnoncesList extends React.Component {
                         spinner
                         text={getLoadingText()}>
                         <div className="container white darken-4 rounded-1 p-4 mt-2">
-
-                            {JSON.stringify(this.state.announces)}
-
                             <div className="row">
-                                <div className="col-md-6 col-sm-6 mt-2">
+                                <div className="col-md-12 col-sm-12 mt-2">
 
                                     <div className="grid-item col-md-12 mb-4">
                                         <div className="card">
@@ -373,7 +370,7 @@ class AnnoncesList extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className="col-md-6">
+                                <div className="col-md-12">
                                     <div className="row">
 
                                         {this.state.announces.map((announce) =>
@@ -428,11 +425,8 @@ class AnnoncesList extends React.Component {
                         spinner
                         text={getLoadingText()}>
                         <div className="container white darken-4 rounded-1 p-4 mt-2">
-
-                            {JSON.stringify(this.state.announces)}
-
                             <div className="row">
-                                <div className="col-md-6 col-sm-12">
+                                <div className="col-md-12 col-sm-12">
                                     <div className="grid-item col-md-12 mb-4">
                                         <div className="card">
                                             <div className="card-header text-center">

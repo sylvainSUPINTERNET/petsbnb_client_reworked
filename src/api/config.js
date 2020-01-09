@@ -49,6 +49,9 @@ export let apiEndpoints = {
     // Announces
     announcesSearch:`${apiConfiguration.apiUrl}${apiConfiguration.annoncesPath}${apiConfiguration.search}`,
     announcesSearchProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.annoncesPath}${apiConfiguration.search}`,
+    announceProfile : `${apiConfiguration.apiUrl}${apiConfiguration.annoncesPath}`,
+    announceProfileProxy : `${apiConfiguration.apiProxyUrl}${apiConfiguration.annoncesPath}`,
+
 
 
 };
