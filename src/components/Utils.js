@@ -29,3 +29,8 @@ export let displayDate = (createdAt, formatStr) => {
     //return moment(createdAt)
 };
 
+
+
+export let capitalize = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};

@@ -294,7 +294,7 @@ class Home extends React.Component {
                                             <div className="input-group-append">
                                                 <label className="input-group-text blue darken-4 text-white"
                                                        htmlFor="inputGroupSelect02"><i
-                                                    className="fa fa-map-pin"></i></label>
+                                                    className="fa fa-map-marker-alt"></i></label>
                                             </div>
                                         </div>
 

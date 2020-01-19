@@ -36,9 +36,9 @@ class AnnouncesCard extends React.Component {
                         </a>
 
                         <div className="text-center mt-2">
-                        <span className="badge badge-info ml-2"><i className="fas fa-clock"></i> {this.props.announce.farePerHour}{displayCurrency(this.props.announce.currency)}</span>
-                            <span className="badge badge-info ml-2"><i className="fas fa-calendar-day"></i> {this.props.announce.farePerDay}{displayCurrency(this.props.announce.currency)}</span>
-                        <span className="badge badge-info ml-2"><i className="fa fa-calendar-alt"></i>  {this.props.announce.farePerMonth}{displayCurrency(this.props.announce.currency)}</span>
+                        <span className="badge badge-pill badge-info ml-2"><i className="fas fa-clock"></i> {this.props.announce.farePerHour}{displayCurrency(this.props.announce.currency)}</span>
+                            <span className="badge badge-pill badge-info ml-2"><i className="fas fa-calendar-day"></i> {this.props.announce.farePerDay}{displayCurrency(this.props.announce.currency)}</span>
+                        <span className="badge badge-pill badge-info ml-2"><i className="fa fa-calendar-alt"></i>  {this.props.announce.farePerMonth}{displayCurrency(this.props.announce.currency)}</span>
                         </div>
                     </div>
                     <div className="card-body card-body-cascade text-center">
@@ -52,7 +52,7 @@ class AnnouncesCard extends React.Component {
                        </div>
                     </div>
                     <div className="card-footer text-muted text-center">
-                        <button onClick={this.goToProfile} className="btn btn-md btn-primary">Voir l'annonce</button>
+                        <button onClick={this.goToProfile} className="btn btn-md btn-indigo text-white">Voir l'annonce</button>
                     </div>
                 </div>
 
