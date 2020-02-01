@@ -7,7 +7,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import Calendar from 'react-calendar';
 
 
-import {displayCurrency, displayDate, capitalize} from "../Utils";
+import {capitalize, displayCurrency} from "../Utils";
 
 class AnnouncesProfile extends React.Component {
     constructor(props) {
@@ -16,14 +16,23 @@ class AnnouncesProfile extends React.Component {
             isLoading: true,
             delay: 10,
             announce: {
-                city: "" // to avoid undefined when we using method for display
+                city: "", // to avoid undefined when we using method for display
+                equipments: [],
+                services: [],
+                animalsType: []
             },
             bookingBtnDisabled: true,
-            bookingPeriod: new Date()
+            bookingPeriod: new Date(),
+            services: [],
+            animalsType: [],
+            animalTypeChoice: "",
+            serviceChoice: "",
         };
 
         this.onChangeBookingDate = this.onChangeBookingDate.bind(this);
         this.onConfirmBookingDate = this.onConfirmBookingDate.bind(this);
+        this.handleChangeAnimalTypeChoiceId = this.handleChangeAnimalTypeChoiceId.bind(this);
+        this.handleChangeServiceChoiceId = this.handleChangeServiceChoiceId.bind(this)
     }
 
 
@@ -32,31 +41,109 @@ class AnnouncesProfile extends React.Component {
         const {uuid} = this.props.match.params;
 
         // call APIs
-        setTimeout( () => {
+        setTimeout(() => {
             this.getAnnounce(uuid);
+            this.getServices();
+            this.getAnimalsType();
         }, this.state.delay)
     }
 
 
-    onChangeBookingDate(bookingPeriod){
+    onChangeBookingDate(bookingPeriod) {
         console.log(bookingPeriod)
         this.setState({
-            bookingPeriod : bookingPeriod
+            bookingPeriod: bookingPeriod
         })
     }
 
-    onConfirmBookingDate(){
+    onConfirmBookingDate() {
         console.log("CONFIRMED -> ", this.state.bookingPeriod)
-
     }
 
-    
+    handleChangeAnimalTypeChoiceId(event) {
+        this.state.animalTypeChoice = event.target.value;
+        this.bookingBtnEnabled();
+    }
+
+    handleChangeServiceChoiceId(event) {
+        this.state.servicesChoice = event.target.value;
+        this.bookingBtnEnabled();
+    }
+
+    bookingBtnEnabled() {
+        console.log("c", this.state.servicesChoice)
+        console.log("b", this.state.animalTypeChoice)
+
+        if (this.state.animalTypeChoice !== "" && this.state.servicesChoice !== "") {
+            this.setState({
+                bookingBtnDisabled: false
+            });
+        }
+    }
+
+
+    /**
+     * Get all animalsType to generate list
+     * @returns {Promise<void>}
+     */
+    async getAnimalsType() {
+        try {
+
+            const {data, status} = await Api.AnimalsType.list();
+            if (status === 200) {
+                console.log("animalsType data ");
+                console.log(data);
+                this.setState({
+                    animalsType: data,
+                    isLoading: false
+                });
+            } else {
+                this.setState({
+                    isLoading: false
+                });
+            }
+        } catch (e) {
+            this.setState({
+                isLoading: false
+            });
+            console.log("error api animalsType-> ", e)
+        }
+    }
+
+    /**
+     * Get all services for the list generation
+     * @returns {Promise<void>}
+     */
+    async getServices() {
+        try {
+            const {data, status} = await Api.Services.list();
+            if (status === 200) {
+                console.log("SERVICES data ")
+                console.log(data);
+                this.setState({
+                    services: data,
+                    isLoading: false
+                })
+            } else {
+                this.setState({
+                    isLoading: false
+                })
+            }
+        } catch (e) {
+            console.log("get services error : ", e);
+            this.setState({
+                isLoading: false
+            });
+        }
+    }
 
     async getAnnounce(uuid) {
         try {
             const {data, status} = await Api.Announces.getOne(uuid);
 
             if (status === 200) {
+                console.log("DATA")
+                console.log(data);
                 this.setState({
                     announce: data,
                     isLoading: false
@@ -81,9 +168,6 @@ class AnnouncesProfile extends React.Component {
     render() {
         return (
             <div>
-                {
-                    JSON.stringify(this.state.announce)
-                }
                 <LoadingOverlay
                     active={this.state.isLoading}
                     spinner
@@ -95,16 +179,35 @@ class AnnouncesProfile extends React.Component {
 
                             <div className="card-body">
                                 <h3 className="card-title">{this.state.announce.title}</h3>
-                                <h4 className=""> <i className="fa fa-map-marker-alt"></i> {this.state.announce.dept} - { capitalize(this.state.announce.city)} , {this.state.announce.streetAddress}</h4>
+                                <h4 className=""><i
+                                    className="fa fa-map-marker-alt"></i> {this.state.announce.dept} - {capitalize(this.state.announce.city)} , {this.state.announce.streetAddress}
+                                </h4>
 
                                 <div className="row">
                                     <div className="col-md-6">
                                         <div className="">
-                                            <span className="badge badge-info ml-2"><i className="fas fa-clock"></i> {this.state.announce.farePerHour}{displayCurrency(this.state.announce.currency)}</span>
-                                            <span className="badge badge-info ml-2"><i className="fas fa-calendar-day"></i> {this.state.announce.farePerDay}{displayCurrency(this.state.announce.currency)}</span>
-                                            <span className="badge badge-info ml-2"><i className="fa fa-calendar-alt"></i>  {this.state.announce.farePerMonth}{displayCurrency(this.state.announce.currency)}</span>
+                                            <span className="badge badge-info ml-2"><i
+                                                className="fas fa-clock"></i> {this.state.announce.farePerHour}{displayCurrency(this.state.announce.currency)}</span>
+                                            <span className="badge badge-info ml-2"><i
+                                                className="fas fa-calendar-day"></i> {this.state.announce.farePerDay}{displayCurrency(this.state.announce.currency)}</span>
+                                            <span className="badge badge-info ml-2"><i
+                                                className="fa fa-calendar-alt"></i> {this.state.announce.farePerMonth}{displayCurrency(this.state.announce.currency)}</span>
                                         </div>
-                                        <p className="card-text mt-2">{this.state.announce.description}</p>
+                                        <p className="card-text mt-4">{this.state.announce.description}</p>
+
+                                        {this.state.announce.equipments.length > 0 &&
+                                        <div className="mt-4">
+                                            <div>
+                                                {this.state.announce.equipments.map(equipment => {
+                                                    return <div className="row" key={equipment.id}>
+                                                        <div className="col">
+                                                            <i className="fa fa-check green-text"></i> {equipment.name}
+                                                        </div>
+                                                    </div>
+                                                })}
+                                            </div>
+                                        </div>
+                                        }
 
                                         <hr></hr>
 
@@ -112,19 +215,57 @@ class AnnouncesProfile extends React.Component {
                                         <div className="row m-3">
                                             <div className="col-md-6">
                                                 <h5>Service</h5>
+                                                <label>
+                                                    <select value={this.state.servicesChoiceId}
+                                                            className="browser-default custom-select"
+                                                            onChange={this.handleChangeServiceChoiceId}>
+                                                        <option value="" disabled selected>Choisissez votre service
+                                                        </option>
+                                                        {this.state.announce.services.map((e, key) => {
+                                                            return <option key={key} value={e.id}>{e.name}</option>;
+                                                        })}
+                                                    </select>
+                                                </label>
                                             </div>
                                             <div className="col-md-6">
                                                 <h5>Animal</h5>
+                                                <label>
+                                                    <select value={this.state.animalsTypeChoiceId}
+                                                            className="browser-default custom-select"
+                                                            onChange={this.handleChangeAnimalTypeChoiceId}>
+                                                        <option value="" disabled selected>Choisissez votre type
+                                                            d'animal
+                                                        </option>
+                                                        {this.state.announce.animalsType.map((e, key) => {
+                                                            return <option key={key} value={e.id}>{e.name}</option>;
+                                                        })}
+                                                    </select>
+                                                </label>
                                             </div>
                                         </div>
 
-                                        <span className="small red-text">Choisissez votre type d'animaux et votre service</span>
-                                        <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#modalBooking" disabled={this.state.bookingBtnDisabled}>
-                                            Réserver
-                                        </button>
+
+                                        <div className="row m3">
+                                            {this.state.announce.equipments.name}
+                                        </div>
+
+                                        <div className={this.state.bookingBtnDisabled ? "small red-text" : "small red-text invisible"} role="alert">
+                                            <p className="text-center">
+                                                Choisissez votre type d'animaux et votre service
+                                            </p>
+                                        </div>
+
+                                        <div className="text-center">
+                                            <button type="button" className="btn btn-danger" data-toggle="modal"
+                                                    data-target="#modalBooking"
+                                                    disabled={this.state.bookingBtnDisabled}>
+                                                Réserver
+                                            </button>
+                                        </div>
 
 
-                                        <div className="modal fade" id="modalBooking" tabindex="-1" role="dialog" aria-labelledby="modalBooking"
+                                        <div className="modal fade" id="modalBooking" tabindex="-1" role="dialog"
+                                             aria-labelledby="modalBooking"
                                              aria-hidden="true">
 
                                             <div className="modal-dialog modal-dialog-centered" role="document">
@@ -132,8 +273,10 @@ class AnnouncesProfile extends React.Component {
 
                                                 <div className="modal-content">
                                                     <div className="modal-header">
-                                                        <h5 className="modal-title" id="bookingModalLongTitle">Réservation</h5>
-                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <h5 className="modal-title"
+                                                            id="bookingModalLongTitle">Réservation</h5>
+                                                        <button type="button" className="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -151,7 +294,9 @@ class AnnouncesProfile extends React.Component {
 
                                                     </div>
                                                     <div className="text-center mb-3">
-                                                        <button type="button" className="btn btn-success" onClick={this.onConfirmBookingDate}>Confirmé</button>
+                                                        <button type="button" className="btn btn-success"
+                                                                onClick={this.onConfirmBookingDate}>Confirmé
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -163,9 +308,9 @@ class AnnouncesProfile extends React.Component {
                                             <img className="card-img-top"
                                                  src="https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).jpg"
                                                  alt="Card image cap"/>
-                                                <a href="#!">
-                                                    <div className="mask rgba-white-slight"></div>
-                                                </a>
+                                            <a href="#!">
+                                                <div className="mask rgba-white-slight"></div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

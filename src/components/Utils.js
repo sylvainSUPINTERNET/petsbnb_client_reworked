@@ -30,6 +30,17 @@ export let displayDate = (createdAt, formatStr) => {
 };
 
 
+/**
+ * Truncate text
+ * @param str
+ * @param breakPoint
+ * @returns {string}
+ */
+export let truncate = (str, breakPoint) => {
+    return str.length > 60 ? str.substring(0, breakPoint) + "..." : str;
+};
+
+
 
 export let capitalize = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
