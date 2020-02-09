@@ -10,7 +10,6 @@ let getAccessToken = () => {
 };
 
 
-
 export default {
-    getAccessToken : getAccessToken
+    getAccessToken : getAccessToken,
 }

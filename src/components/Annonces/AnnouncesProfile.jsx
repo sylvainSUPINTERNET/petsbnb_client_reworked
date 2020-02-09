@@ -27,7 +27,6 @@ class AnnouncesProfile extends React.Component {
             serviceChoice: "",
         };
 
-        this.onConfirmBookingDate = this.onConfirmBookingDate.bind(this);
         this.handleChangeAnimalTypeChoiceId = this.handleChangeAnimalTypeChoiceId.bind(this);
         this.handleChangeServiceChoiceId = this.handleChangeServiceChoiceId.bind(this)
         this.bookingBtnEnabled = this.bookingBtnEnabled.bind(this);
@@ -48,11 +47,6 @@ class AnnouncesProfile extends React.Component {
 
 
 
-
-    onConfirmBookingDate() {
-        // TODO
-        console.log("CONFIRMED -> TODO get period from child BookingCalendar")
-    }
 
     handleChangeAnimalTypeChoiceId(event) {
         this.setState({
@@ -292,11 +286,6 @@ class AnnouncesProfile extends React.Component {
                                                             </div>
                                                         </div>
 
-                                                    </div>
-                                                    <div className="text-center mb-3">
-                                                        <button type="button" className="btn btn-success"
-                                                                onClick={this.onConfirmBookingDate}>Confirmé
-                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

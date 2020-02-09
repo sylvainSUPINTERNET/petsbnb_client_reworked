@@ -21,7 +21,10 @@ export let apiConfiguration = {
     annoncesPath: "/announces",
 
     // Prefix
-    search: "/search"
+    search: "/search",
+
+    // User
+    userPath: "/users",
 };
 
 export const jwt = {
@@ -51,6 +54,10 @@ export let apiEndpoints = {
     announcesSearchProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.annoncesPath}${apiConfiguration.search}`,
     announceProfile : `${apiConfiguration.apiUrl}${apiConfiguration.annoncesPath}`,
     announceProfileProxy : `${apiConfiguration.apiProxyUrl}${apiConfiguration.annoncesPath}`,
+
+    // User
+    userMe: `${apiConfiguration.apiUrl}${apiConfiguration.userPath}`,
+    userMeProxy: `${apiConfiguration.apiProxyUrl}${apiConfiguration.userPath}`,
 
 
 

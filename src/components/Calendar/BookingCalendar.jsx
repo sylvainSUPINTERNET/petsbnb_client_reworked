@@ -3,6 +3,13 @@ import {withRouter} from "react-router-dom";
 import Calendar from 'react-calendar';
 import constantsDb from '../../constants/index';
 
+import Api from "../../api/index"
+
+import JWTService from "../../services/JwtService";
+import jwtManager from "jsonwebtoken";
+import {jwt} from "../../api/config";
+
+
 
 class BookingCalendar extends React.Component {
 
@@ -16,11 +23,47 @@ class BookingCalendar extends React.Component {
             arrivalTime: "",
         };
 
+        this.onConfirmBookingDate = this.onConfirmBookingDate.bind(this);
         this.onChangeBookingDate = this.onChangeBookingDate.bind(this);
         this.handleChangeDepartureTime = this.handleChangeDepartureTime.bind(this);
         this.handleChangeArrivalTime = this.handleChangeArrivalTime.bind(this);
     }
 
+    onConfirmBookingDate(){
+        console.log(" ---> BOOKING CONFIRMED todo")
+
+        Api
+            .User
+            .getMe()
+            .then( (data) => {
+                console.log(data);
+                if(data.status === 200) {
+                    const userId = data.data.userId;
+                    console.log("booking period", this.state.bookingPeriod);
+                    console.log("booking § departure", this.state.departureTime);
+                    console.log("booking @ arrival  ", this.state.arrivalTime);
+                    console.log("Booking userid", userId);
+                } else {
+                    console.log("API USER ERROR", data);
+                }
+            })
+            .catch( err => console.log(err))
+
+
+        // TODO -> recuperer l'userId (regler l'erreur CORS);
+        // REPARER LES routes users côté api
+        // TODO -> recuperer le service id / animal type id / announce id / calculer la somme dûe et creer le booking (API - POST)
+        /*
+        jwtManager
+            .verify(JWTService.getAccessToken(), jwt.secret_dev, (err, decoded) => {
+                if(err){
+                    console.log("error jwt deoced", err)
+                } else {
+                    console.log("jwt decoded", decoded)
+                }
+            });
+            */
+    }
     onChangeBookingDate(bookingPeriod) {
         console.log("service choose - parent", this.props.service)
         this.setState({
@@ -74,6 +117,12 @@ class BookingCalendar extends React.Component {
                         </div>
                     </div>
 
+                    <div className="text-center mb-3">
+                        <button type="button" className="btn btn-success"
+                                onClick={this.onConfirmBookingDate}>Confirmé
+                        </button>
+                    </div>
+
                 </div>
             )
 
@@ -99,6 +148,12 @@ class BookingCalendar extends React.Component {
                             <input type="time" id="departure" name="arrivalTime" onChange={this.handleChangeArrivalTime}
                                    min="00:00" max="23:00" required/>
                         </div>
+                    </div>
+
+                    <div className="text-center mb-3">
+                        <button type="button" className="btn btn-success"
+                                onClick={this.onConfirmBookingDate}>Confirmé
+                        </button>
                     </div>
 
                 </div>
