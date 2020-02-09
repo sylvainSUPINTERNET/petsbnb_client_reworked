@@ -4,8 +4,7 @@ import Footer from '../../components/Partials/Footer';
 import {withRouter} from "react-router-dom";
 import {getLoadingText} from '../LoaderSettings';
 import LoadingOverlay from 'react-loading-overlay';
-import Calendar from 'react-calendar';
-
+import BookingCalendar from '../../components/Calendar/BookingCalendar';
 
 import {capitalize, displayCurrency} from "../Utils";
 
@@ -22,17 +21,16 @@ class AnnouncesProfile extends React.Component {
                 animalsType: []
             },
             bookingBtnDisabled: true,
-            bookingPeriod: new Date(),
             services: [],
             animalsType: [],
             animalTypeChoice: "",
             serviceChoice: "",
         };
 
-        this.onChangeBookingDate = this.onChangeBookingDate.bind(this);
         this.onConfirmBookingDate = this.onConfirmBookingDate.bind(this);
         this.handleChangeAnimalTypeChoiceId = this.handleChangeAnimalTypeChoiceId.bind(this);
         this.handleChangeServiceChoiceId = this.handleChangeServiceChoiceId.bind(this)
+        this.bookingBtnEnabled = this.bookingBtnEnabled.bind(this);
     }
 
 
@@ -49,38 +47,45 @@ class AnnouncesProfile extends React.Component {
     }
 
 
-    onChangeBookingDate(bookingPeriod) {
-        console.log(bookingPeriod)
-        this.setState({
-            bookingPeriod: bookingPeriod
-        })
-    }
+
 
     onConfirmBookingDate() {
-        console.log("CONFIRMED -> ", this.state.bookingPeriod)
+        // TODO
+        console.log("CONFIRMED -> TODO get period from child BookingCalendar")
     }
 
     handleChangeAnimalTypeChoiceId(event) {
-        this.state.animalTypeChoice = event.target.value;
-        this.bookingBtnEnabled();
+        this.setState({
+            animalTypeChoice : event.target.value
+        }, async () => {
+            this.bookingBtnEnabled();
+        });
     }
 
     handleChangeServiceChoiceId(event) {
-        this.state.servicesChoice = event.target.value;
-        this.bookingBtnEnabled();
+        this.setState({
+            servicesChoice : event.target.value
+        }, async () => {
+            this.bookingBtnEnabled();
+        });
     }
 
     bookingBtnEnabled() {
-        console.log("c", this.state.servicesChoice)
-        console.log("b", this.state.animalTypeChoice)
 
         if (this.state.animalTypeChoice !== "" && this.state.servicesChoice !== "") {
             this.setState({
                 bookingBtnDisabled: false
             });
         }
+
+        console.log("c", this.state.servicesChoice)
+        console.log("b", this.state.animalTypeChoice)
     }
 
+    test(){
+        console.log(this.state.servicesChoice)
+        return this.state.servicesChoice
+    }
 
     /**
      * Get all animalsType to generate list
@@ -264,7 +269,7 @@ class AnnouncesProfile extends React.Component {
                                         </div>
 
 
-                                        <div className="modal fade" id="modalBooking" tabindex="-1" role="dialog"
+                                        <div className="modal fade" id="modalBooking" tabIndex="-1" role="dialog"
                                              aria-labelledby="modalBooking"
                                              aria-hidden="true">
 
@@ -283,12 +288,7 @@ class AnnouncesProfile extends React.Component {
                                                     <div className="modal-body">
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <Calendar
-                                                                    minDate={new Date()}
-                                                                    hover
-                                                                    selectRange
-                                                                    onChange={this.onChangeBookingDate}
-                                                                    value={this.state.bookingPeriod}/>
+                                                                <BookingCalendar service={this.state.servicesChoice} announce={this.state.announce}/>
                                                             </div>
                                                         </div>
 
