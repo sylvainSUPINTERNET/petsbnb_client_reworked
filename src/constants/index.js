@@ -1,8 +1,11 @@
 'use strict';
 
-import constantsServices from "./database";
+import * as constants from "./database";
 
 
 export default {
-    CONSTANTS_SERVICES : constantsServices
+    CONSTANTS_SERVICES : constants.constantsServices,
+    CONSTANTS_SERVICES_ITTERABLE: constants.constantsServicesItterable,
+    CONSTANTS_SERVICES_UNIT_PRICE: constants.unitServicePrice,
+    CONSTANTS_SERVICES_MULTIPLE_PRICE: constants.multipleServicePrice
 }

@@ -25,6 +25,8 @@ class AnnouncesProfile extends React.Component {
             animalsType: [],
             animalTypeChoice: "",
             serviceChoice: "",
+            totalPrice: "00.00", // from children BookingCalendar,
+            currency: "EUR"
         };
 
         this.handleChangeAnimalTypeChoiceId = this.handleChangeAnimalTypeChoiceId.bind(this);
@@ -45,8 +47,10 @@ class AnnouncesProfile extends React.Component {
         }, this.state.delay)
     }
 
-
-
+    // get price from children use as props
+    cbPrice = (childDataPrice) => {
+        this.setState({totalPrice: childDataPrice})
+    };
 
     handleChangeAnimalTypeChoiceId(event) {
         this.setState({
@@ -57,6 +61,7 @@ class AnnouncesProfile extends React.Component {
     }
 
     handleChangeServiceChoiceId(event) {
+        console.log('service changed' , event.target.value);
         this.setState({
             servicesChoice : event.target.value
         }, async () => {
@@ -76,10 +81,6 @@ class AnnouncesProfile extends React.Component {
         console.log("b", this.state.animalTypeChoice)
     }
 
-    test(){
-        console.log(this.state.servicesChoice)
-        return this.state.servicesChoice
-    }
 
     /**
      * Get all animalsType to generate list
@@ -165,6 +166,8 @@ class AnnouncesProfile extends React.Component {
 
 
     render() {
+        let service = this.state.servicesChoice;
+        let animalType = this.state.animalTypeChoice;
         return (
             <div>
                 <LoadingOverlay
@@ -260,6 +263,7 @@ class AnnouncesProfile extends React.Component {
                                                     disabled={this.state.bookingBtnDisabled}>
                                                 Réserver
                                             </button>
+                                            <p>Total prix : {this.state.totalPrice} {this.state.currency} </p>
                                         </div>
 
 
@@ -282,7 +286,13 @@ class AnnouncesProfile extends React.Component {
                                                     <div className="modal-body">
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <BookingCalendar service={this.state.servicesChoice} announce={this.state.announce}/>
+                                                                <BookingCalendar
+                                                                    service={this.state.servicesChoice}
+                                                                    announce={this.state.announce}
+                                                                    animalTypeChoice={animalType}
+                                                                    cbPrice={this.cbPrice}
+                                                                    price={this.state.totalPrice}
+                                                                    serviceChoice={service}/>
                                                             </div>
                                                         </div>
 
